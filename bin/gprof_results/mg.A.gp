@@ -3,15 +3,12 @@ Flat profile:
 Each sample counts as 0.01 seconds.
   %   cumulative   self              self     total           
  time   seconds   seconds    calls  Ts/call  Ts/call  name    
- 92.13     18.37    18.37                             exact
-  3.51     19.07     0.70                             kmp_flag_64::wait(kmp_info*, int)
-  3.23     19.72     0.65                             __kmpc_flush
-  0.75     19.87     0.15                             __kmp_invoke_microtask
-  0.15     19.90     0.03                             main
-  0.08     19.91     0.02                             __kmpc_end_serialized_parallel
-  0.05     19.92     0.01                             __kmp_get_global_thread_id_reg
-  0.05     19.93     0.01                             __kmp_hardware_timestamp
-  0.05     19.94     0.01                             __kmpc_for_static_init_4
+ 40.05      1.63     1.63                             showall
+ 27.76      2.76     1.13                             kmp_flag_64::wait(kmp_info*, int)
+ 16.46      3.43     0.67                             zran3
+  8.60      3.78     0.35                             vranlc
+  3.69      3.93     0.15                             __kmp_invoke_microtask
+  3.44      4.07     0.14                             interp
 
  %         the percentage of the total running time of the
 time       program used by this function.

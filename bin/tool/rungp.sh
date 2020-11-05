@@ -1,6 +1,6 @@
 cd ..
 for bench in *.*;do
 	./$bench
-	gprof $bench > $bench.gp
+	gprof $bench > gprof_results/$bench.gp
 done
 

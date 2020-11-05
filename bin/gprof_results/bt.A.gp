@@ -3,16 +3,19 @@ Flat profile:
 Each sample counts as 0.01 seconds.
   %   cumulative   self              self     total           
  time   seconds   seconds    calls  Ts/call  Ts/call  name    
- 64.93     48.56    48.56                             compute_rhs
- 10.50     56.41     7.85                             matmul_sub
-  9.16     63.26     6.85                             matvec_sub
-  8.80     69.84     6.58                             binvcrhs
-  5.90     74.25     4.41                             kmp_flag_64::wait(kmp_info*, int)
-  0.49     74.62     0.37                             __kmp_invoke_microtask
-  0.09     74.69     0.07                             exact_solution
-  0.08     74.75     0.06                             __kmp_hardware_timestamp
-  0.04     74.78     0.03                             binvrhs
-  0.01     74.79     0.01                             __kmp_init_implicit_task
+ 58.59     46.64    46.64                             compute_rhs
+ 12.44     56.54     9.90                             kmp_flag_64::wait(kmp_info*, int)
+ 10.02     64.52     7.98                             matmul_sub
+  8.71     71.45     6.93                             matvec_sub
+  8.49     78.21     6.76                             binvcrhs
+  1.33     79.27     1.06                             __kmp_invoke_microtask
+  0.21     79.44     0.17                             __kmp_hardware_timestamp
+  0.09     79.51     0.07                             binvrhs
+  0.08     79.57     0.06                             exact_solution
+  0.01     79.58     0.01                             __kmp_hyper_barrier_gather(barrier_type, kmp_info*, int, int, void (*)(void*, void*))
+  0.01     79.59     0.01                             __kmp_barrier
+  0.01     79.60     0.01                             __kmp_terminate_thread
+  0.01     79.61     0.01                             __kmpc_for_static_init_4
 
  %         the percentage of the total running time of the
 time       program used by this function.
