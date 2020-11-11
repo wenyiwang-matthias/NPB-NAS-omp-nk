@@ -84,8 +84,9 @@ CLINK	= clang
 #---------------------------------------------------------------------------
 # These macros are passed to the linker 
 #---------------------------------------------------------------------------
-C_LIB  =  -lm -L/home/matthias/libomp-linux/lib -lomp -lgomp -lpthread -Wl,--no-as-needed -ldl
+C_LIB  = /home/matthias/openmp/omplibs/libomp-linux/lib/libomp.a -lm -lpthread -ldl
 
+#C_LIB  =  -lm -L/home/matthias/openmp/omplibs/libomp-linux/lib -lomp -lgomp -lpthread -Wl,--no-as-needed -ldl
 #---------------------------------------------------------------------------
 # These macros are passed to the compiler 
 #---------------------------------------------------------------------------
@@ -101,7 +102,7 @@ CFLAGS	= -O3 -fopenmp -mcmodel=large
 # Global *link time* flags. Flags for increasing maximum executable 
 # size usually go here. 
 #---------------------------------------------------------------------------
-CLINKFLAGS = -pg  
+CLINKFLAGS =   
 
 #---------------------------------------------------------------------------
 # Utilities C:
