@@ -3,10 +3,10 @@ Flat profile:
 Each sample counts as 0.01 seconds.
   %   cumulative   self              self     total           
  time   seconds   seconds    calls  Ts/call  Ts/call  name    
- 70.53      4.38     4.38                             vranlc
- 23.99      5.87     1.49                             main
-  4.19      6.13     0.26                             kmp_flag_64::wait(kmp_info*, int)
-  1.29      6.21     0.08                             __kmp_invoke_microtask
+ 73.27      4.14     4.14                             vranlc
+ 24.96      5.55     1.41                             main
+  1.06      5.61     0.06                             kmp_flag_64::wait(kmp_info*, int)
+  0.71      5.65     0.04                             __kmp_invoke_microtask
 
  %         the percentage of the total running time of the
 time       program used by this function.
