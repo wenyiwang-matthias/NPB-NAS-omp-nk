@@ -37,24 +37,42 @@
 #include "global.h"
 
 /* function declarations */
-static void evolve(dcomplex u0[NZ][NY][NX], dcomplex u1[NZ][NY][NX],
-		   int t, int indexmap[NZ][NY][NX], int d[3]);
-static void compute_initial_conditions(dcomplex u0[NZ][NY][NX], int d[3]);
+//static void evolve(dcomplex u0[NZ][NY][NX], dcomplex u1[NZ][NY][NX],
+//		   int t, int indexmap[NZ][NY][NX], int d[3]);
+
+static void evolve(dcomplex*** u0, dcomplex*** u1,
+		   int t, int*** indexmap, int d[3]);
+//static void compute_initial_conditions(dcomplex u0[NZ][NY][NX], int d[3]);
+static void compute_initial_conditions(dcomplex ***u0, int d[3]);
 static void ipow46(double a, int exponent, double *result);
 static void setup(void);
-static void compute_indexmap(int indexmap[NZ][NY][NX], int d[3]);
+//static void compute_indexmap(int indexmap[NZ][NY][NX], int d[3]);
+static void compute_indexmap(int ***indexmap, int d[3]);
 static void print_timers(void);
-static void fft(int dir, dcomplex x1[NZ][NY][NX], dcomplex x2[NZ][NY][NX]);
-static void cffts1(int is, int d[3], dcomplex x[NZ][NY][NX],
-		   dcomplex xout[NZ][NY][NX],
+//static void fft(int dir, dcomplex x1[NZ][NY][NX], dcomplex x2[NZ][NY][NX]);
+static void fft(int dir, dcomplex ***x1, dcomplex ***x2);
+//static void cffts1(int is, int d[3], dcomplex x[NZ][NY][NX],
+//		   dcomplex xout[NZ][NY][NX],
+//		   dcomplex y0[NX][FFTBLOCKPAD],
+//		   dcomplex y1[NX][FFTBLOCKPAD]);
+static void cffts1(int is, int d[3], dcomplex ***x,
+		   dcomplex ***xout,
 		   dcomplex y0[NX][FFTBLOCKPAD],
 		   dcomplex y1[NX][FFTBLOCKPAD]);
-static void cffts2(int is, int d[3], dcomplex x[NZ][NY][NX],
-		   dcomplex xout[NZ][NY][NX],
+//static void cffts2(int is, int d[3], dcomplex x[NZ][NY][NX],
+//		   dcomplex xout[NZ][NY][NX],
+//		   dcomplex y0[NX][FFTBLOCKPAD],
+//		   dcomplex y1[NX][FFTBLOCKPAD]);
+//static void cffts3(int is, int d[3], dcomplex x[NZ][NY][NX],
+//		   dcomplex xout[NZ][NY][NX],
+//		   dcomplex y0[NX][FFTBLOCKPAD],
+//		   dcomplex y1[NX][FFTBLOCKPAD]);
+static void cffts2(int is, int d[3], dcomplex ***x,
+		   dcomplex ***xout,
 		   dcomplex y0[NX][FFTBLOCKPAD],
 		   dcomplex y1[NX][FFTBLOCKPAD]);
-static void cffts3(int is, int d[3], dcomplex x[NZ][NY][NX],
-		   dcomplex xout[NZ][NY][NX],
+static void cffts3(int is, int d[3], dcomplex ***x,
+		   dcomplex ***xout,
 		   dcomplex y0[NX][FFTBLOCKPAD],
 		   dcomplex y1[NX][FFTBLOCKPAD]);
 static void fft_init (int n);
@@ -64,15 +82,71 @@ static void fftz2 (int is, int l, int m, int n, int ny, int ny1,
 		   dcomplex u[NX], dcomplex x[NX][FFTBLOCKPAD],
 		   dcomplex y[NX][FFTBLOCKPAD]);
 static int ilog2(int n);
-static void checksum(int i, dcomplex u1[NZ][NY][NX], int d[3]);
+//static void checksum(int i, dcomplex u1[NZ][NY][NX], int d[3]);
+static void checksum(int i, dcomplex ***u1, int d[3]);
 static void verify (int d1, int d2, int d3, int nt,
 		    boolean *verified, char *class);
 
+static void arr_init();
+/* array malloc helper */
+/* bump allocator */
+
+static void * __m=0;
+
+#define ALIGN(x,a) (((x)+(a)-1)&~((a)-1))
+
+#define _malloc(n) ({ if (!__m) { __m = malloc(1UL<<33); if(!__m){printf("no __m\n"); }} void *__r = __m; unsigned long long  __n = ALIGN(n, 16);  __m+=__n; __r; })
+
+void* arr_malloc(int d, int* dn){
+   if( d == 1){
+       return (void*) _malloc(sizeof(double)*dn[0]);
+  }
+   void** a =(void**) _malloc(sizeof(void*)*dn[0]);
+   for (int i = 0; i < dn[0]; i++){
+      a[i] = arr_malloc(d-1, dn+1);
+   }
+   return (void*)a;
+}
+
+void* dcomplex_malloc(int d, int* dn){
+   if( d == 1){
+       return (void*) _malloc(sizeof(dcomplex)*dn[0]);
+  }
+   void** a =(void**) _malloc(sizeof(void*)*dn[0]);
+   for (int i = 0; i < dn[0]; i++){
+      a[i] = arr_malloc(d-1, dn+1);
+   }
+   return (void*)a;
+}
+void* int_malloc(int d, int* dn){
+   if( d == 1){
+       return (void*) _malloc(sizeof(int)*dn[0]);
+  }
+   void** a =(void**) _malloc(sizeof(void*)*dn[0]);
+   for (int i = 0; i < dn[0]; i++){
+      a[i] = arr_malloc(d-1, dn+1);
+   }
+   return (void*)a;
+}
+
+
+/* arrary init */
+
+ //   static dcomplex ***u0;
+   // static dcomplex ***u1;
+   // static dcomplex ***u2;
+    //static int ***indexmap;
+static void arr_init(){
+//	printf("array init...\n");
+	int param1[] = {EXPMAX+1};
+	ex = arr_malloc(1, param1);
+}
 /*--------------------------------------------------------------------
 c FT benchmark
 c-------------------------------------------------------------------*/
 
 int main(int argc, char **argv) {
+	arr_init();
 
 /*c-------------------------------------------------------------------
 c-------------------------------------------------------------------*/
@@ -97,13 +171,56 @@ c heap rather than the stack. This common block is not
 c referenced directly anywhere else. Padding is to avoid accidental 
 c cache problems, since all array sizes are powers of two.
 c-------------------------------------------------------------------*/
-    static dcomplex u0[NZ][NY][NX];
+//    static dcomplex u0[NZ][NY][NX];
+    static dcomplex ***u0;
     static dcomplex pad1[3];
-    static dcomplex u1[NZ][NY][NX];
+//    static dcomplex u1[NZ][NY][NX];
+    static dcomplex ***u1;
     static dcomplex pad2[3];
-    static dcomplex u2[NZ][NY][NX];
+//    static dcomplex u2[NZ][NY][NX];
+    static dcomplex ***u2;
     static dcomplex pad3[3];
-    static int indexmap[NZ][NY][NX];
+//    static int indexmap[NZ][NY][NX];
+
+    static int ***indexmap;
+
+    int param2[3] = {NZ, NY, NX};
+
+    u1= _malloc(NZ*sizeof(dcomplex **));
+    for(int j = 0;j<NZ;j++){
+	    u1[j]=_malloc(NY*sizeof(dcomplex *));
+	    for(int k = 0;k<NY;k++)
+		    u1[j][k]=_malloc(NX*sizeof(dcomplex));
+    }
+
+
+    u0= _malloc(NZ*sizeof(dcomplex **));
+    for(int j = 0;j<NZ;j++){
+	    u0[j]=_malloc(NY*sizeof(dcomplex *));
+	    for(int k = 0;k<NY;k++)
+		    u0[j][k]=_malloc(NX*sizeof(dcomplex));
+    }
+    
+    u2= _malloc(NZ*sizeof(dcomplex **));
+    for(int j = 0;j<NZ;j++){
+	    u2[j]=_malloc(NY*sizeof(dcomplex *));
+	    for(int k = 0;k<NY;k++)
+		    u2[j][k]=_malloc(NX*sizeof(dcomplex));
+    }
+   
+    indexmap= _malloc(NZ*sizeof(int **));
+    for(int j = 0;j<NZ;j++){
+	    indexmap[j]=_malloc(NY*sizeof(int *));
+	    for(int k = 0;k<NY;k++)
+		    indexmap[j][k]=_malloc(NX*sizeof(int));
+    }
+
+//    u1 = dcomplex_malloc(3,param2);
+//    u0 = dcomplex_malloc(3,param2);
+//    u2 = dcomplex_malloc(3,param2);
+//    indexmap = int_malloc(3,param2);
+
+
     
     int iter;
     int nthreads = 1;
@@ -119,15 +236,22 @@ c-------------------------------------------------------------------*/
     for (i = 0; i < T_MAX; i++) {
 	timer_clear(i);
     }
+    //
+    //
+//    printf("setting up\n");
     setup();
-
+//    printf("finished!\n");
+//    printf("compute index map\n");
     compute_indexmap(indexmap, dims[2]);
-  
+//    printf("computer initial conditions\n");
     compute_initial_conditions(u1, dims[0]);
+   
+//    printf("ftt_init\n");
     fft_init (dims[0][0]);
 
- 
+//    printf("ftt\n");
     fft(1, u1, u0);
+//    printf("fft finished!\n");
 
 
 
@@ -138,7 +262,6 @@ c-------------------------------------------------------------------*/
     for (i = 0; i < T_MAX; i++) {
 	timer_clear(i);
     }
-
     timer_start(T_TOTAL);
     if (TIMERS_ENABLED == TRUE) timer_start(T_SETUP);
 
@@ -189,7 +312,6 @@ c-------------------------------------------------------------------*/
 	    }
         
     }
-
     verify(NX, NY, NZ, niter, &verified, &class);
 
 #pragma omp parallel 
@@ -222,8 +344,10 @@ c-------------------------------------------------------------------*/
 /*--------------------------------------------------------------------
 c-------------------------------------------------------------------*/
 
-static void evolve(dcomplex u0[NZ][NY][NX], dcomplex u1[NZ][NY][NX],
-		   int t, int indexmap[NZ][NY][NX], int d[3]) {
+//static void evolve(dcomplex u0[NZ][NY][NX], dcomplex u1[NZ][NY][NX],
+//		   int t, int indexmap[NZ][NY][NX], int d[3]) {
+static void evolve(dcomplex ***u0, dcomplex ***u1,
+		   int t, int ***indexmap, int d[3]) {
 
 /*--------------------------------------------------------------------
 c-------------------------------------------------------------------*/
@@ -247,8 +371,8 @@ c-------------------------------------------------------------------*/
 /*--------------------------------------------------------------------
 c-------------------------------------------------------------------*/
 
-static void compute_initial_conditions(dcomplex u0[NZ][NY][NX], int d[3]) {
-
+//static void compute_initial_conditions(dcomplex u0[NZ][NY][NX], int d[3]) {
+static void compute_initial_conditions(dcomplex ***u0, int d[3]) {
 /*--------------------------------------------------------------------
 c-------------------------------------------------------------------*/
 
@@ -265,7 +389,7 @@ c-------------------------------------------------------------------*/
     start = SEED;
 /*--------------------------------------------------------------------
 c Jump to the starting element for our first plane.
-c-------------------------------------------------------------------*/
+c-------------------------------------------------------------------*/ 
     ipow46(A, (zstart[0]-1)*2*NX*NY + (ystart[0]-1)*2*NX, &an);
     dummy = randlc(&start, an);
     ipow46(A, 2*NX*NY, &an);
@@ -278,10 +402,12 @@ c-------------------------------------------------------------------*/
         vranlc(2*NX*dims[0][1], &x0, A, tmp);
 	
 	t = 1;
+
 	for (j = 0; j < dims[0][1]; j++)
-	  for (i = 0; i < NX; i++) {
+	  for (i = 0; i < NX; i++){
 	    u0[k][j][i].real = tmp[t++];
 	    u0[k][j][i].imag = tmp[t++];
+	    //printf("%d ",i);
 	  }
 	      
         if (k != dims[0][2]) dummy = randlc(&start, an);
@@ -391,7 +517,8 @@ c-------------------------------------------------------------------*/
 /*--------------------------------------------------------------------
 c-------------------------------------------------------------------*/
 
-static void compute_indexmap(int indexmap[NZ][NY][NX], int d[3]) {
+//static void compute_indexmap(int indexmap[NZ][NY][NX], int d[3]) {
+static void compute_indexmap(int ***indexmap, int d[3]) {
 
 /*--------------------------------------------------------------------
 c-------------------------------------------------------------------*/
@@ -468,7 +595,8 @@ c-------------------------------------------------------------------*/
 /*--------------------------------------------------------------------
 c-------------------------------------------------------------------*/
 
-static void fft(int dir, dcomplex x1[NZ][NY][NX], dcomplex x2[NZ][NY][NX]) {
+//static void fft(int dir, dcomplex x1[NZ][NY][NX], dcomplex x2[NZ][NY][NX]) {
+static void fft(int dir, dcomplex ***x1, dcomplex ***x2) {
 
 /*--------------------------------------------------------------------
 c-------------------------------------------------------------------*/
@@ -498,8 +626,10 @@ c-------------------------------------------------------------------*/
 /*--------------------------------------------------------------------
 c-------------------------------------------------------------------*/
 
-static void cffts1(int is, int d[3], dcomplex x[NZ][NY][NX],
-		   dcomplex xout[NZ][NY][NX],
+//static void cffts1(int is, int d[3], dcomplex x[NZ][NY][NX],
+//		   dcomplex xout[NZ][NY][NX],
+static void cffts1(int is, int d[3], dcomplex ***x,
+		   dcomplex ***xout,
 		   dcomplex y0[NX][FFTBLOCKPAD],
 		   dcomplex y1[NX][FFTBLOCKPAD]) {
 
@@ -553,8 +683,10 @@ dcomplex y1[NX][FFTBLOCKPAD];
 /*--------------------------------------------------------------------
 c-------------------------------------------------------------------*/
 
-static void cffts2(int is, int d[3], dcomplex x[NZ][NY][NX],
-		   dcomplex xout[NZ][NY][NX],
+//static void cffts2(int is, int d[3], dcomplex x[NZ][NY][NX],
+//		   dcomplex xout[NZ][NY][NX],
+static void cffts2(int is, int d[3], dcomplex ***x,
+		   dcomplex ***xout,
 		   dcomplex y0[NX][FFTBLOCKPAD],
 		   dcomplex y1[NX][FFTBLOCKPAD]) {
 
@@ -603,8 +735,10 @@ dcomplex y1[NX][FFTBLOCKPAD];
 /*--------------------------------------------------------------------
 c-------------------------------------------------------------------*/
 
-static void cffts3(int is, int d[3], dcomplex x[NZ][NY][NX],
-		   dcomplex xout[NZ][NY][NX],
+//static void cffts3(int is, int d[3], dcomplex x[NZ][NY][NX],
+//		   dcomplex xout[NZ][NY][NX],
+static void cffts3(int is, int d[3], dcomplex ***x,
+		   dcomplex ***xout,
 		   dcomplex y0[NX][FFTBLOCKPAD],
 		   dcomplex y1[NX][FFTBLOCKPAD]) {
 
@@ -846,7 +980,8 @@ c-------------------------------------------------------------------*/
 /*--------------------------------------------------------------------
 c-------------------------------------------------------------------*/
 
-static void checksum(int i, dcomplex u1[NZ][NY][NX], int d[3]) {
+//static void checksum(int i, dcomplex u1[NZ][NY][NX], int d[3]) {
+static void checksum(int i, dcomplex ***u1, int d[3]) {
 
 #pragma omp parallel default(shared) 
 {

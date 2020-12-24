@@ -60,11 +60,56 @@ static void x_solve(void);
 static void y_solve(void);
 static void z_solve(void);
 
+/* Changed to Dynamic */
+static void arr_init(void);
+static void* arr_malloc(int d,int* dn);
+/* Bump Allocator Helper */
+
+static void * __m=0;
+#define ALIGN(x,a) (((x)+(a)-1)&~((a)-1))
+
+#define _malloc(n) ({ if (!__m) { __m = malloc(1UL<<33); if(!__m){printf("no __m\n"); }} void *__r = __m; unsigned long long  __n = ALIGN(n, 8);  __m+=__n; __r; })
+
+static
+void* arr_malloc(int d, int* dn){
+   if( d == 1){
+       return (void*) _malloc(sizeof(double)*dn[0]);
+  }
+   void** a =(void**) _malloc(sizeof(void*)*dn[0]);
+   for (int i = 0; i < dn[0]; i++){
+      //printf("%d\n",dn[0]);
+      a[i] = arr_malloc(d-1, dn+1);
+   }
+
+   return (void*)a;
+}
+/* arr_init */
+static void arr_init(void){
+	int param1[3] = {IMAX/2*2+1,JMAX/2*2+1,KMAX/2*2+1};
+	us	= (double***) arr_malloc(3,param1);
+	vs	= (double***) arr_malloc(3,param1);
+	ws   	= (double***) arr_malloc(3,param1);
+	qs 	= (double***) arr_malloc(3,param1);
+	ainv 	= (double***) arr_malloc(3,param1);
+	rho_i	= (double***) arr_malloc(3,param1);
+	speed	= (double***) arr_malloc(3,param1);
+	square	= (double***) arr_malloc(3,param1);
+
+	int param2[4] = {5,IMAX/2*2+1,JMAX/2*2+1,KMAX/2*2+1};
+
+	u	= (double****)arr_malloc(4,param2);
+	rhs	= (double****)arr_malloc(4,param2);
+	forcing	= (double****)arr_malloc(4,param2);
+
+	int param3[4] = {15,IMAX/2*2+1,JMAX/2*2+1,KMAX/2*2+1};
+
+	lhs	= (double****)arr_malloc(4,param3);
+}
 /*--------------------------------------------------------------------
        program SP
 c-------------------------------------------------------------------*/
 int main(int argc, char **argv) {
-    
+    arr_init();
   int niter, step;
   double mflops, tmax;
   int nthreads = 1;

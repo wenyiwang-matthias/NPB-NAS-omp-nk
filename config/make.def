@@ -102,7 +102,7 @@ CFLAGS	= -O3 -fopenmp -mcmodel=large
 # Global *link time* flags. Flags for increasing maximum executable 
 # size usually go here. 
 #---------------------------------------------------------------------------
-CLINKFLAGS =  -pg 
+CLINKFLAGS =  
 
 #---------------------------------------------------------------------------
 # Utilities C:
