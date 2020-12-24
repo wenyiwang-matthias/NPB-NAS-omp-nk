@@ -68,11 +68,127 @@ static void z_solve(void);
 static void z_backsubstitute(void);
 static void z_solve_cell(void);
 
+static void* arr_malloc(int d, int *dn);
+static void arr_init(void);
+
+static void * __m=0;
+#define ALIGN(x,a) (((x)+(a)-1)&~((a)-1))
+
+#define _malloc(n) ({ if (!__m) { __m = malloc(1UL<<33); if(!__m){printf("no __m\n"); }} void *__r = __m; unsigned long long  __n = ALIGN(n, 16);  __m+=__n; __r; })
+
+static 
+void* arr_malloc(int d, int* dn){
+   if( d == 1){
+       return (void*) _malloc(sizeof(double)*dn[0]);
+  }
+   void** a =(void**) _malloc(sizeof(void*)*dn[0]);
+   for (int i = 0; i < dn[0]; i++){
+      //printf("%d\n",dn[0]);
+      a[i] = arr_malloc(d-1, dn+1);
+   }
+
+   return (void*)a;
+}
+
+static double*** arr_malloc3(int* dn);
+static double**** arr_malloc4(int* dn);
+static double***** arr_malloc5( int* dn);
+
+static double*** arr_malloc3( int* dn){
+	double*** arr;
+	arr = _malloc(dn[0]*sizeof(double**));
+	for(int i = 0; i < dn[0]; i++){
+		arr[i] = _malloc(dn[1]*sizeof(double*));
+		for(int j = 0; j < dn[1]; j++){
+			arr[i][j] = _malloc(dn[2]*sizeof(double));
+		}
+	}
+	return arr;
+}
+static double**** arr_malloc4(int* dn){
+	double**** arr;
+	arr = _malloc(dn[0]*sizeof(double***));
+	for(int i = 0; i < dn[0]; i++){
+		arr[i] = _malloc(dn[1]*sizeof(double**));
+		for(int j = 0; j < dn[1]; j++){
+			arr[i][j] = _malloc(dn[2]*sizeof(double*));
+			for(int k = 0;k < dn[2]; k++){
+				arr[i][j][k] = _malloc(dn[3]*sizeof(double));
+			}
+		}
+	}
+	return arr;
+}
+static double***** arr_malloc5(int* dn){
+	double***** arr;
+	arr = _malloc(dn[0]*sizeof(double****));
+	for(int i = 0; i < dn[0]; i++){
+		arr[i] = _malloc(dn[1]*sizeof(double***));
+		for(int j = 0; j < dn[1]; j++){
+			arr[i][j] = _malloc(dn[2]*sizeof(double**));	
+			for(int k = 0;k < dn[2]; k++){
+				arr[i][j][k] = _malloc(dn[3]*sizeof(double*));
+				for(int m = 0;m < dn[3]; m++){
+					arr[i][j][k][m] = _malloc(dn[4]*sizeof(double));
+				}
+			}
+		}
+	}
+	return arr;
+}
+static void arr_init(void){
+int us_params[3]={IMAX/2*2+1,JMAX/2*2+1, KMAX/2*2+1};
+//us = (void*) arr_malloc(3, us_params);
+us = arr_malloc3(us_params);
+
+int vs_params[3] = {IMAX/2*2+1,JMAX/2*2+1,KMAX/2*2+1};
+//vs = (void*) arr_malloc(3, vs_params);
+vs = arr_malloc3(vs_params);
+
+int ws_params[3] = {IMAX/2*2+1,JMAX/2*2+1,KMAX/2*2+1};
+//ws = (void*) arr_malloc(3, ws_params);
+ws = arr_malloc3(ws_params);
+
+int qs_params[3] = {IMAX/2*2+1,JMAX/2*2+1,KMAX/2*2+1};
+//qs = (void*) arr_malloc(3, qs_params);
+qs = arr_malloc3(qs_params);
+
+int rho_i_params[3] = {IMAX/2*2+1,JMAX/2*2+1,KMAX/2*2+1};
+//rho_i = (void*) arr_malloc(3, rho_i_params);
+rho_i = arr_malloc3(rho_i_params);
+
+int square_params[3] = {IMAX/2*2+1,JMAX/2*2+1,KMAX/2*2+1};
+//square = (void*) arr_malloc(3, square_params);
+square = arr_malloc3(square_params);
+
+int forcing_params[4] = { IMAX/2*2+1, JMAX/2*2+1, KMAX/2*2+1, 5+1};
+//forcing = (void*) arr_malloc(4, forcing_params);
+forcing = arr_malloc4(forcing_params);
+
+int u_params[4] = {(IMAX+1)/2*2+1,(JMAX+1)/2*2+1,(KMAX+1)/2*2+1,5};
+//u = (void*) arr_malloc(4, u_params);
+u = arr_malloc4(u_params);
+
+int rhs_params[4] = {IMAX/2*2+1,JMAX/2*2+1, KMAX/2*2+1,5};
+//rhs = (double****) arr_malloc(4, rhs_params);
+rhs = arr_malloc4(rhs_params);
+
+// int lhs_params[6] = {IMAX/2*2+1,JMAX/2*2+1,KMAX/2*2+1, 3, 5, 5};
+// lhs = (void*) arr_malloc(6, lhs_params);
+
+int fjac_params[5] = { IMAX/2*2+1, JMAX/2*2+1, KMAX-1+1, 5, 5};
+//fjac = (void*) arr_malloc(5, fjac_params);
+fjac = arr_malloc5(fjac_params);
+
+int njac_params[5] = { IMAX/2*2+1, JMAX/2*2+1, KMAX-1+1, 5, 5};
+//njac = (void*) arr_malloc(5, njac_params);
+njac = arr_malloc5(njac_params);
+}
+
 /*--------------------------------------------------------------------
       program BT
 c-------------------------------------------------------------------*/
 int main(int argc, char **argv) {
-    
   int niter, step, n3;
   int nthreads = 1;
   double navg, mflops;
@@ -121,7 +237,7 @@ c-------------------------------------------------------------------*/
     printf(" Problem size too big for compiled array sizes\n");
     exit(1);
   }
-
+  arr_init();
   set_constants();
 
   initialize();
@@ -273,7 +389,7 @@ static void rhs_norm(double rms[5]) {
   for (m = 0; m < 5; m++) {
     rms[m] = 0.0;
   }
-
+//printf("%f\n\n",rms[1]);
   for (i = 1; i < grid_points[0]-1; i++) {
     for (j = 1; j < grid_points[1]-1; j++) {
       for (k = 1; k < grid_points[2]-1; k++) {
@@ -291,6 +407,7 @@ static void rhs_norm(double rms[5]) {
     }
     rms[m] = sqrt(rms[m]);
   }
+
 }
 
 
@@ -2419,7 +2536,6 @@ c-------------------------------------------------------------------*/
   compute_rhs();
 
   rhs_norm(xcr);
-
   for (m = 0; m < 5; m++) {
     xcr[m] = xcr[m] / dt;
   }
