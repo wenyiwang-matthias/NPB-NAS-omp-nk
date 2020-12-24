@@ -32,7 +32,8 @@
   
 --------------------------------------------------------------------*/
 
-#include "npb-C.h"
+#include "../common/npb-C.h"
+#include <nautilus/shell.h>
 
 /* global variables */
 #include "header.h"
@@ -68,11 +69,99 @@ static void z_solve(void);
 static void z_backsubstitute(void);
 static void z_solve_cell(void);
 
+
+
+static int program_BT(char *__buf, void* __priv);
+int program_BT_profile(char *_, void* __);
+
+static struct shell_cmd_impl nas_bt_impl = {
+    .cmd      = "nas-bt",
+    .help_str = "NAS parallel benchmark BT",
+    .handler  = program_BT_profile,
+};
+nk_register_shell_cmd(nas_bt_impl);
+
+
+int program_BT_profile(char *_, void *__){
+  
+#ifdef NAUT_CONFIG_PROFILE
+      nk_instrument_clear();
+      nk_instrument_start();
+#endif      
+      program_BT(_,__);
+#ifdef NAUT_CONFIG_PROFILE
+      nk_instrument_end();
+      nk_instrument_query();
+#endif
+return 0;
+}
+
+
+#define IMAX    PROBLEM_SIZE
+#define JMAX    PROBLEM_SIZE
+#define KMAX    PROBLEM_SIZE
+
+static void * __m=0;
+#define ALIGN(x,a) (((x)+(a)-1)&~((a)-1))
+
+#define _malloc(n) ({ if (!__m) { __m = malloc(1UL<<33); if(!__m){printf("no __m\n"); }} void *__r = __m; unsigned long long  __n = ALIGN(n, 8);  __m+=__n; __r; })
+
+static 
+void* arr_malloc(int d, int* dn){
+   if( d == 1){
+       return (void*) _malloc(sizeof(double)*dn[0]);
+  }
+   void** a =(void**) _malloc(sizeof(void*)*dn[0]);
+   for (int i = 0; i < dn[0]; i++){
+      //printf("%d\n",dn[0]);
+      a[i] = arr_malloc(d-1, dn+1);
+   }
+
+   return (void*)a;
+}
+
 /*--------------------------------------------------------------------
       program BT
 c-------------------------------------------------------------------*/
-int main(int argc, char **argv) {
-    
+static int program_BT(char *__buf, void* __priv) {
+int us_params[3]={IMAX/2*2+1,JMAX/2*2+1, KMAX/2*2+1};
+us = (void*) arr_malloc(3, us_params);
+
+int vs_params[3] = {IMAX/2*2+1,JMAX/2*2+1,KMAX/2*2+1};
+vs = (void*) arr_malloc(3, vs_params);
+
+int ws_params[3] = {IMAX/2*2+1,JMAX/2*2+1,KMAX/2*2+1};
+ws = (void*) arr_malloc(3, ws_params);
+
+int qs_params[3] = {IMAX/2*2+1,JMAX/2*2+1,KMAX/2*2+1};
+qs = (void*) arr_malloc(3, qs_params);
+
+int rho_i_params[3] = {IMAX/2*2+1,JMAX/2*2+1,KMAX/2*2+1};
+rho_i = (void*) arr_malloc(3, rho_i_params);
+
+int square_params[3] = {IMAX/2*2+1,JMAX/2*2+1,KMAX/2*2+1};
+square = (void*) arr_malloc(3, square_params);
+
+int forcing_params[4] = { IMAX/2*2+1, JMAX/2*2+1, KMAX/2*2+1, 5+1};
+forcing = (void*) arr_malloc(4, forcing_params);
+
+int u_params[4] = {(IMAX+1)/2*2+1,(JMAX+1)/2*2+1,(KMAX+1)/2*2+1,5};
+u = (void*) arr_malloc(4, u_params);
+
+int rhs_params[4] = {IMAX/2*2+1,JMAX/2*2+1, KMAX/2*2+1,5};
+rhs = (void*) arr_malloc(4, rhs_params);
+
+// int lhs_params[6] = {IMAX/2*2+1,JMAX/2*2+1,KMAX/2*2+1, 3, 5, 5};
+// lhs = (void*) arr_malloc(6, lhs_params);
+
+int fjac_params[5] = { IMAX/2*2+1, JMAX/2*2+1, KMAX-1+1, 5, 5};
+
+fjac = (void*) arr_malloc(5, fjac_params);
+
+int njac_params[5] = { IMAX/2*2+1, JMAX/2*2+1, KMAX-1+1, 5, 5};
+
+njac = (void*) arr_malloc(5, njac_params);
+
   int niter, step, n3;
   int nthreads = 1;
   double navg, mflops;
@@ -80,7 +169,7 @@ int main(int argc, char **argv) {
   double tmax;
   boolean verified;
   char class;
-  FILE *fp;
+  //FILE *fp;
 
 /*--------------------------------------------------------------------
 c      Root node reads input file (if it exists) else takes
@@ -90,25 +179,25 @@ c-------------------------------------------------------------------*/
   printf("\n\n NAS Parallel Benchmarks 3.0 structured OpenMP C version"
 	 " - BT Benchmark\n\n");
 
-  fp = fopen("inputbt.data", "r");
-  if (fp != NULL) {
-    printf(" Reading from input file inputbt.data");
-    fscanf(fp, "%d", &niter);
-    while (fgetc(fp) != '\n');
-    fscanf(fp, "%lg", &dt);
-    while (fgetc(fp) != '\n');
-    fscanf(fp, "%d%d%d",
-	   &grid_points[0],  &grid_points[1],  &grid_points[2]);
-    fclose(fp);
-  } else {
-    printf(" No input file inputbt.data. Using compiled defaults\n");
+  /* fp = fopen("inputbt.data", "r"); */
+  /* if (fp != NULL) { */
+  /*   printf(" Reading from input file inputbt.data"); */
+  /*   fscanf(fp, "%d", &niter); */
+  /*   while (fgetc(fp) != '\n'); */
+  /*   fscanf(fp, "%lg", &dt); */
+  /*   while (fgetc(fp) != '\n'); */
+  /*   fscanf(fp, "%d%d%d", */
+  /* 	   &grid_points[0],  &grid_points[1],  &grid_points[2]); */
+  /*   fclose(fp); */
+  /* } else { */
+  /*   printf(" No input file inputbt.data. Using compiled defaults\n"); */
 
     niter = NITER_DEFAULT;
     dt    = DT_DEFAULT;
     grid_points[0] = PROBLEM_SIZE;
     grid_points[1] = PROBLEM_SIZE;
     grid_points[2] = PROBLEM_SIZE;
-  }
+    // }
 
   printf(" Size: %3dx%3dx%3d\n",
 	 grid_points[0], grid_points[1], grid_points[2]);
@@ -152,6 +241,8 @@ c-------------------------------------------------------------------*/
 #if defined(_OPENMP)
 #pragma omp master  
   nthreads = omp_get_num_threads();
+
+  printf("nthreads %d\n",nthreads);
 #endif /* _OPENMP */
 } /* end parallel */
 
@@ -1372,7 +1463,7 @@ c-------------------------------------------------------------------*/
 	  - tmp1 * dy5;
 
 	lhs[i][j][k][BB][0][0] = 1.0
-	  + tmp1 * 2.0 * njac[i][j][k][0][0]
+	  + tmp1 * 2.0* njac[i][j][k][0][0]
 	  + tmp1 * 2.0 * dy1;
 	lhs[i][j][k][BB][0][1] = tmp1 * 2.0 * njac[i][j][k][0][1];
 	lhs[i][j][k][BB][0][2] = tmp1 * 2.0 * njac[i][j][k][0][2];
@@ -2709,7 +2800,7 @@ c-------------------------------------------------------------------*/
       for (k = 1; k < grid_points[2]-1; k++) {
 	for (m = 0; m < BLOCK_SIZE; m++) {
 	  for (n = 0; n < BLOCK_SIZE; n++) {
-	    rhs[i][j][k][m] = rhs[i][j][k][m]
+	    rhs[i][j][k][m] = rhs[i][j][k][m];
 	      - lhs[i][j][k][CC][m][n]*rhs[i+1][j][k][n];
 	  }
 	}

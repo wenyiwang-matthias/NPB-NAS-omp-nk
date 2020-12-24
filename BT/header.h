@@ -16,9 +16,11 @@ c      dt_default:    default time step for this problem size if no
 c                     config file
 c      niter_default: default number of iterations for this problem size
 --------------------------------------------------------------------*/
+#ifndef _HEADER_H_
+#define _HEADER_H_
 
 #include "npbparams.h"
-
+#include "../math/nas_math.h"
 #define	AA		0
 #define BB		1
 #define CC		2
@@ -57,22 +59,38 @@ c   for even number sizes only.
 */
 
 /* COMMON block: fields */
-static double us[IMAX/2*2+1][JMAX/2*2+1][KMAX/2*2+1];
-static double vs[IMAX/2*2+1][JMAX/2*2+1][KMAX/2*2+1];
-static double ws[IMAX/2*2+1][JMAX/2*2+1][KMAX/2*2+1];
-static double qs[IMAX/2*2+1][JMAX/2*2+1][KMAX/2*2+1];
-static double rho_i[IMAX/2*2+1][JMAX/2*2+1][KMAX/2*2+1];
-static double square[IMAX/2*2+1][JMAX/2*2+1][KMAX/2*2+1];
-static double forcing[IMAX/2*2+1][JMAX/2*2+1][KMAX/2*2+1][5+1];
-static double u[(IMAX+1)/2*2+1][(JMAX+1)/2*2+1][(KMAX+1)/2*2+1][5];
-static double rhs[IMAX/2*2+1][JMAX/2*2+1][KMAX/2*2+1][5];
+
+static double*** us;
+static double*** vs;
+static double*** ws;
+static double*** qs;
+static double*** rho_i;
+static double*** square;
+
+static double **** forcing;
+static double **** u;
+static double **** rhs;
+//static double ****** lhs;
+
+static double ***** fjac;
+static double ***** njac;
+
+// static double us[IMAX/2*2+1][JMAX/2*2+1][KMAX/2*2+1];
+// static double vs[IMAX/2*2+1][JMAX/2*2+1][KMAX/2*2+1];
+// static double ws[IMAX/2*2+1][JMAX/2*2+1][KMAX/2*2+1];
+// static double qs[IMAX/2*2+1][JMAX/2*2+1][KMAX/2*2+1];
+// static double rho_i[IMAX/2*2+1][JMAX/2*2+1][KMAX/2*2+1];
+// static double square[IMAX/2*2+1][JMAX/2*2+1][KMAX/2*2+1];
+// static double forcing[IMAX/2*2+1][JMAX/2*2+1][KMAX/2*2+1][5+1];
+// static double u[(IMAX+1)/2*2+1][(JMAX+1)/2*2+1][(KMAX+1)/2*2+1][5];
+// static double rhs[IMAX/2*2+1][JMAX/2*2+1][KMAX/2*2+1][5];
 static double lhs[IMAX/2*2+1][JMAX/2*2+1][KMAX/2*2+1][3][5][5];
 
 /* COMMON block: work_1d */
-static double cuf[PROBLEM_SIZE];
-static double q[PROBLEM_SIZE];
-static double ue[PROBLEM_SIZE][5];
-static double buf[PROBLEM_SIZE][5];
+double cuf[PROBLEM_SIZE];
+double q[PROBLEM_SIZE];
+double ue[PROBLEM_SIZE][5];
+double buf[PROBLEM_SIZE][5];
 #pragma omp threadprivate(cuf, q, ue, buf)
 
 /*
@@ -81,9 +99,10 @@ c   to arrays) padded by 1 for even number sizes only.
 */
 
 /* COMMON block: work_lhs */
-static double fjac[IMAX/2*2+1][JMAX/2*2+1][KMAX-1+1][5][5];
-/* fjac(5, 5, 0:IMAX/2*2, 0:JMAX/2*2, 0:KMAX-1) */
-static double njac[IMAX/2*2+1][JMAX/2*2+1][KMAX-1+1][5][5];
+// static double fjac[IMAX/2*2+1][JMAX/2*2+1][KMAX-1+1][5][5];
+// /* fjac(5, 5, 0:IMAX/2*2, 0:JMAX/2*2, 0:KMAX-1) */
+// static double njac[IMAX/2*2+1][JMAX/2*2+1][KMAX-1+1][5][5];
 /* njac(5, 5, 0:IMAX/2*2, 0:JMAX/2*2, 0:KMAX-1) */
 static double tmp1, tmp2, tmp3;
 
+#endif
