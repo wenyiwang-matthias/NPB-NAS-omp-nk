@@ -72,9 +72,12 @@ static void* arr_malloc(int d, int *dn);
 static void arr_init(void);
 
 static void * __m=0;
+static void * __o=0;
 #define ALIGN(x,a) (((x)+(a)-1)&~((a)-1))
 
-#define _malloc(n) ({ if (!__m) { __m = malloc(1UL<<33); if(!__m){printf("no __m\n"); }} void *__r = __m; unsigned long long  __n = ALIGN(n, 16);  __m+=__n; __r; })
+#define _malloc(n) ({ if (!__m) { __m = malloc(1UL<<33);__o=__m; if(!__m){printf("no __m\n"); }} void *__r = __m; unsigned long long  __n = ALIGN(n, 16);  __m+=__n; __r; })
+
+#define _free() free(__o)
 
 static 
 void* arr_malloc(int d, int* dn){
@@ -289,6 +292,8 @@ c-------------------------------------------------------------------*/
 		  tmax, mflops, "          floating point", 
 		  verified, NPBVERSION,COMPILETIME, CS1, CS2, CS3, CS4, CS5, 
 		  CS6, "(none)");
+//wenyi
+  free(__o);
 }
 
 /*--------------------------------------------------------------------
