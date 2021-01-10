@@ -1,0 +1,7 @@
+npbparams.h
+*.o
+*.A
+*.B
+*.S
+*.W
+
