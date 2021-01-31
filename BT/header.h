@@ -69,8 +69,8 @@ static double **** u;
 static double **** rhs;
 //static double ****** lhs;
 
-static double ***** fjac;
-static double ***** njac;
+//static double ***** fjac;
+//static double ***** njac;
 
 // static double us[IMAX/2*2+1][JMAX/2*2+1][KMAX/2*2+1];
 // static double vs[IMAX/2*2+1][JMAX/2*2+1][KMAX/2*2+1];

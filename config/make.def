@@ -84,7 +84,8 @@ CLINK	= clang
 #---------------------------------------------------------------------------
 # These macros are passed to the linker 
 #---------------------------------------------------------------------------
-C_LIB  = /home/matthias/openmp/omplibs/libomp-jc/linux/linux_libomp.a -lm -lpthread -ldl
+C_LIB  = -fsanitize=undefined,nullability,thread -lomp -lm -lpthread -ldl 
+#C_LIB  = /home/matthias/openmp/omplibs/libomp-jc/linux/linux_libomp.a -lm -lpthread -ldl
 
 #C_LIB  =  -lm -L/home/matthias/openmp/omplibs/libomp-linux/lib -lomp -lgomp -lpthread -Wl,--no-as-needed -ldl
 #---------------------------------------------------------------------------
@@ -95,7 +96,9 @@ C_INC = -I../common
 #---------------------------------------------------------------------------
 # Global *compile time* flags for C programs
 #---------------------------------------------------------------------------
-CFLAGS	= -O3 -fopenmp  -mcmodel=large
+CFLAGS	= -fsanitize=undefined,nullability,thread  -O3 -fopenmp 
+#CFLAGS = -O3 -fopenmp -mcmodel=large
+# -mcmodel=large
 # CFLAGS = -g
 
 #---------------------------------------------------------------------------

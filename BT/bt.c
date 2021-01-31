@@ -75,7 +75,15 @@ static void * __m=0;
 static void * __o=0;
 #define ALIGN(x,a) (((x)+(a)-1)&~((a)-1))
 
-#define _malloc(n) ({ if (!__m) { __m = malloc(1UL<<33);__o=__m; if(!__m){printf("no __m\n"); }} void *__r = __m; unsigned long long  __n = ALIGN(n, 16);  __m+=__n; __r; })
+//#define _malloc(n) ({ if (!__m) { __m = malloc(1UL<<33);__o=__m; if(!__m){printf("no __m\n"); }} void *__r = __m; unsigned long long  __n = ALIGN(n, 16);  __m+=__n; __r; })
+
+typedef double jac_matrix_t[IMAX/2*2+1][JMAX/2*2+1][KMAX-1+1][5][5];
+double *fjac_ptr;
+double *njac_ptr;
+#define ACAST(T, ptr) (*(T*)ptr)
+#define fjac ACAST(jac_matrix_t, fjac_ptr)
+#define njac ACAST(jac_matrix_t, njac_ptr)
+#define _malloc(n) calloc(n,1)
 
 #define _free() free(__o)
 
@@ -181,11 +189,13 @@ rhs = arr_malloc4(rhs_params);
 
 int fjac_params[5] = { IMAX/2*2+1, JMAX/2*2+1, KMAX-1+1, 5, 5};
 //fjac = (void*) arr_malloc(5, fjac_params);
-fjac = arr_malloc5(fjac_params);
+//fjac = arr_malloc5(fjac_params);
+fjac_ptr = calloc(sizeof(jac_matrix_t), 1);
 
 int njac_params[5] = { IMAX/2*2+1, JMAX/2*2+1, KMAX-1+1, 5, 5};
 //njac = (void*) arr_malloc(5, njac_params);
-njac = arr_malloc5(njac_params);
+//njac = arr_malloc5(njac_params);
+njac_ptr = calloc(sizeof(jac_matrix_t), 1);
 }
 
 /*--------------------------------------------------------------------
