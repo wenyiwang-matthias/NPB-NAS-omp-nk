@@ -19,7 +19,7 @@
 
 
 #ft      B
-#mg      B
+mg      B
 #sp      B
 #lu      B
 #bt      B
@@ -27,14 +27,14 @@
 #ep      B
 #cg      B
 
-ft      C
-mg      C
-sp      C
-lu      C
+#ft      C
+#mg      C
+#sp      C
+#lu      C
 #bt      C
 #is      C
-ep      C
-cg      C
+#ep      C
+#cg      C
 
 #ft      S
 #mg      S

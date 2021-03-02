@@ -34,7 +34,9 @@
 --------------------------------------------------------------------*/
 
 #include "npb-C.h"
-
+#include <signal.h>
+#include <sys/mman.h>
+#include <unistd.h>
 #include "globals.h"
 
 /* parameters */
@@ -76,8 +78,10 @@ c-------------------------------------------------------------------*/
 static void * __m=0;
 static void * __o=0;
 #define ALIGN(x,a) (((x)+(a)-1)&~((a)-1))
+#define N_PAGES (1024*1024*2UL*512UL)
+#define _malloc(n) ({ if (!__m) { __m = mmap(0, N_PAGES, PROT_READ | PROT_WRITE, MAP_ANONYMOUS | MAP_PRIVATE | MAP_HUGETLB, 0, 0);__o=__m; if(__o == MAP_FAILED){perror("Failed to allocated\n");exit(-1); }} void*__r = __m; unsigned long long  __n = ALIGN(n, 16);  __m+=__n; __r; })
 
-#define _malloc(n) ({ if (!__m) { __m = malloc(1UL<<33);__o=__m; if(!__m){printf("no __m\n"); }} void *__r = __m; unsigned long long  __n = ALIGN(n, 16);  __m+=__n; __r; })
+#define __malloc(n) ({ if (!__m) { __m = malloc(1UL<<33);__o=__m; if(!__o){perror("Failed to allocated\n");exit(-1); }} void*__r = __m; unsigned long long  __n = ALIGN(n, 16);  __m+=__n; __r; })
 
 //#define _malloc(n) malloc(n)
 #define _free() free(__o)
@@ -266,6 +270,12 @@ c---------------------------------------------------------------------*/
     
 
     timer_stop(T_INIT);
+    
+    long cpid = getpid();
+    if(argc>=2){
+    	printf("PID : %ld \n", cpid);
+    	kill(cpid, SIGSTOP);
+    }
     timer_start(T_BENCH);
 
     resid(u[lt],v,r[lt],n1,n2,n3,a,lt);
@@ -286,6 +296,10 @@ c---------------------------------------------------------------------*/
 } /* end parallel */
 
     timer_stop(T_BENCH);
+    if(argc>=2){ 
+    	printf("BENCH COMPLETE\n");
+    	kill(cpid, SIGSTOP);
+    }
     t = timer_read(T_BENCH);
     tinit = timer_read(T_INIT);
 
@@ -333,10 +347,12 @@ c---------------------------------------------------------------------*/
 	mflops = 0.0;
     }
 
+
     c_print_results("MG", Class, nx[lt], ny[lt], nz[lt], 
 		    nit, nthreads, t, mflops, "          floating point", 
 		    verified, NPBVERSION, COMPILETIME,
 		    CS1, CS2, CS3, CS4, CS5, CS6, CS7);
+   // kill(cpid,SIGQUIT);
 }
 
 /*--------------------------------------------------------------------
