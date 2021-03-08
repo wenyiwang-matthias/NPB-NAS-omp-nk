@@ -78,7 +78,7 @@ c-------------------------------------------------------------------*/
 static void * __m=0;
 static void * __o=0;
 #define ALIGN(x,a) (((x)+(a)-1)&~((a)-1))
-#define N_PAGES (1024*1024*2UL*512UL)
+#define N_PAGES (1024*1024*2UL*4096UL)
 #define _malloc(n) ({ if (!__m) { __m = mmap(0, N_PAGES, PROT_READ | PROT_WRITE, MAP_ANONYMOUS | MAP_PRIVATE | MAP_HUGETLB, 0, 0);__o=__m; if(__o == MAP_FAILED){perror("Failed to allocated\n");exit(-1); }} void*__r = __m; unsigned long long  __n = ALIGN(n, 16);  __m+=__n; __r; })
 
 #define __malloc(n) ({ if (!__m) { __m = malloc(1UL<<33);__o=__m; if(!__o){perror("Failed to allocated\n");exit(-1); }} void*__r = __m; unsigned long long  __n = ALIGN(n, 16);  __m+=__n; __r; })

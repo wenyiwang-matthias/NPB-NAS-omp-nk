@@ -85,9 +85,14 @@ CLINK	= clang
 # These macros are passed to the linker 
 #---------------------------------------------------------------------------
 #C_LIB  = -fsanitize=undefined,nullability,thread -lomp -lm -lpthread -ldl 
-C_LIB  = /home/matthias/openmp/omplibs/libomp-jc/linux/linux_libomp.a -lm -lpthread -ldl
 
-#C_LIB  =  -lm -L/home/matthias/openmp/omplibs/libomp-linux/lib -lomp -lgomp -lpthread -Wl,--no-as-needed -ldl
+# Static OpenMP Lib
+#C_LIB  = /home/matthias/openmp/omplibs/libomp-jc/linux/linux_libomp.a -lm -lpthread -ldl
+
+# No OpenMP
+C_LIB  = -lm
+
+
 #---------------------------------------------------------------------------
 # These macros are passed to the compiler 
 #---------------------------------------------------------------------------
@@ -100,10 +105,10 @@ C_INC = -I../common
 #CFLAGS = -O3 -fopenmp -mcmodel=large
 # -mcmodel=large
 
-CFLAGS = -fno-omit-frame-pointer -ffreestanding -fno-stack-protector -fno-strict-aliasing -fno-strict-overflow -mno-red-zone -fno-common -fgnu89-inline  -g -m64 -fopenmp -O3 -mcmodel=large
+#CFLAGS = -fno-omit-frame-pointer -ffreestanding -fno-stack-protector -fno-strict-aliasing -fno-strict-overflow -mno-red-zone -fno-common -fgnu89-inline -g -m64 -fopenmp -O3 -mcmodel=large
 
 # No Open MP 
-#CFLAGS = -fno-omit-frame-pointer -ffreestanding -fno-stack-protector -fno-strict-aliasing -fno-strict-overflow -mno-red-zone -fno-common -fgnu89-inline  -g -m64 -O3 -mcmodel=large
+CFLAGS = -fno-omit-frame-pointer -ffreestanding -fno-stack-protector -fno-strict-aliasing -fno-strict-overflow -mno-red-zone -fno-common -fgnu89-inline -g -m64 -O3 -mcmodel=large
 
 #---------------------------------------------------------------------------
 # Global *link time* flags. Flags for increasing maximum executable 
