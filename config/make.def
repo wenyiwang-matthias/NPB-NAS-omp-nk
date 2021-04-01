@@ -102,7 +102,7 @@ C_INC = -I../common
 # Global *compile time* flags for C programs
 #---------------------------------------------------------------------------
 #CFLAGS	= -fsanitize=undefined,nullability,thread  -O3 -fopenmp 
-#CFLAGS = -O3 -fopenmp -mcmodel=large
+#CFLAGS = -O3 -mcmodel=large
 # -mcmodel=large
 
 CFLAGS = -fno-omit-frame-pointer -ffreestanding -fno-stack-protector -fno-strict-aliasing -fno-strict-overflow -mno-red-zone -fno-common -fgnu89-inline -g -m64 -fopenmp -O3 -mcmodel=large

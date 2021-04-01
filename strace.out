@@ -1,0 +1,157 @@
+execve("./bin/bt.S", ["./bin/bt.S"], 0x7fff520b8df0 /* 55 vars */) = 0
+brk(NULL)                               = 0x10a0000
+access("/etc/ld.so.nohwcap", F_OK)      = -1 ENOENT (No such file or directory)
+access("/etc/ld.so.preload", R_OK)      = -1 ENOENT (No such file or directory)
+openat(AT_FDCWD, "/etc/ld.so.cache", O_RDONLY|O_CLOEXEC) = 3
+fstat(3, {st_mode=S_IFREG|0644, st_size=114766, ...}) = 0
+mmap(NULL, 114766, PROT_READ, MAP_PRIVATE, 3, 0) = 0x7f2b6b4e3000
+close(3)                                = 0
+access("/etc/ld.so.nohwcap", F_OK)      = -1 ENOENT (No such file or directory)
+openat(AT_FDCWD, "/lib/x86_64-linux-gnu/libm.so.6", O_RDONLY|O_CLOEXEC) = 3
+read(3, "\177ELF\2\1\1\3\0\0\0\0\0\0\0\0\3\0>\0\1\0\0\0\200\272\0\0\0\0\0\0"..., 832) = 832
+fstat(3, {st_mode=S_IFREG|0644, st_size=1700792, ...}) = 0
+mmap(NULL, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7f2b6b4e1000
+mmap(NULL, 3789144, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_DENYWRITE, 3, 0) = 0x7f2b6af39000
+mprotect(0x7f2b6b0d6000, 2093056, PROT_NONE) = 0
+mmap(0x7f2b6b2d5000, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x19c000) = 0x7f2b6b2d5000
+close(3)                                = 0
+access("/etc/ld.so.nohwcap", F_OK)      = -1 ENOENT (No such file or directory)
+openat(AT_FDCWD, "/lib/x86_64-linux-gnu/libpthread.so.0", O_RDONLY|O_CLOEXEC) = 3
+read(3, "\177ELF\2\1\1\0\0\0\0\0\0\0\0\0\3\0>\0\1\0\0\0000b\0\0\0\0\0\0"..., 832) = 832
+fstat(3, {st_mode=S_IFREG|0755, st_size=144976, ...}) = 0
+mmap(NULL, 2221184, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_DENYWRITE, 3, 0) = 0x7f2b6ad1a000
+mprotect(0x7f2b6ad34000, 2093056, PROT_NONE) = 0
+mmap(0x7f2b6af33000, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x19000) = 0x7f2b6af33000
+mmap(0x7f2b6af35000, 13440, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_ANONYMOUS, -1, 0) = 0x7f2b6af35000
+close(3)                                = 0
+access("/etc/ld.so.nohwcap", F_OK)      = -1 ENOENT (No such file or directory)
+openat(AT_FDCWD, "/lib/x86_64-linux-gnu/libdl.so.2", O_RDONLY|O_CLOEXEC) = 3
+read(3, "\177ELF\2\1\1\0\0\0\0\0\0\0\0\0\3\0>\0\1\0\0\0P\16\0\0\0\0\0\0"..., 832) = 832
+fstat(3, {st_mode=S_IFREG|0644, st_size=14560, ...}) = 0
+mmap(NULL, 2109712, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_DENYWRITE, 3, 0) = 0x7f2b6ab16000
+mprotect(0x7f2b6ab19000, 2093056, PROT_NONE) = 0
+mmap(0x7f2b6ad18000, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x2000) = 0x7f2b6ad18000
+close(3)                                = 0
+access("/etc/ld.so.nohwcap", F_OK)      = -1 ENOENT (No such file or directory)
+openat(AT_FDCWD, "/lib/x86_64-linux-gnu/libc.so.6", O_RDONLY|O_CLOEXEC) = 3
+read(3, "\177ELF\2\1\1\3\0\0\0\0\0\0\0\0\3\0>\0\1\0\0\0\20\35\2\0\0\0\0\0"..., 832) = 832
+fstat(3, {st_mode=S_IFREG|0755, st_size=2030928, ...}) = 0
+mmap(NULL, 4131552, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_DENYWRITE, 3, 0) = 0x7f2b6a725000
+mprotect(0x7f2b6a90c000, 2097152, PROT_NONE) = 0
+mmap(0x7f2b6ab0c000, 24576, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x1e7000) = 0x7f2b6ab0c000
+mmap(0x7f2b6ab12000, 15072, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_ANONYMOUS, -1, 0) = 0x7f2b6ab12000
+close(3)                                = 0
+mmap(NULL, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7f2b6b4df000
+arch_prctl(ARCH_SET_FS, 0x7f2b6b4e0000) = 0
+mprotect(0x7f2b6ab0c000, 16384, PROT_READ) = 0
+mprotect(0x7f2b6ad18000, 4096, PROT_READ) = 0
+mprotect(0x7f2b6af33000, 4096, PROT_READ) = 0
+mprotect(0x7f2b6b2d5000, 4096, PROT_READ) = 0
+mprotect(0x68b000, 4096, PROT_READ)     = 0
+mprotect(0x7f2b6b500000, 4096, PROT_READ) = 0
+munmap(0x7f2b6b4e3000, 114766)          = 0
+set_tid_address(0x7f2b6b4e02d0)         = 3399
+set_robust_list(0x7f2b6b4e02e0, 24)     = 0
+rt_sigaction(SIGRTMIN, {sa_handler=0x7f2b6ad1fcb0, sa_mask=[], sa_flags=SA_RESTORER|SA_SIGINFO, sa_restorer=0x7f2b6ad2c980}, NULL, 8) = 0
+rt_sigaction(SIGRT_1, {sa_handler=0x7f2b6ad1fd50, sa_mask=[], sa_flags=SA_RESTORER|SA_RESTART|SA_SIGINFO, sa_restorer=0x7f2b6ad2c980}, NULL, 8) = 0
+rt_sigprocmask(SIG_UNBLOCK, [RTMIN RT_1], NULL, 8) = 0
+prlimit64(0, RLIMIT_STACK, NULL, {rlim_cur=8192*1024, rlim_max=RLIM64_INFINITY}) = 0
+fstat(1, {st_mode=S_IFCHR|0620, st_rdev=makedev(136, 0), ...}) = 0
+brk(NULL)                               = 0x10a0000
+brk(0x10c1000)                          = 0x10c1000
+write(1, "\n", 1)                       = 1
+write(1, "\n", 1)                       = 1
+write(1, " NAS Parallel Benchmarks 3.0 str"..., 72) = 72
+write(1, "\n", 1)                       = 1
+openat(AT_FDCWD, "inputbt.data", O_RDONLY) = -1 ENOENT (No such file or directory)
+write(1, " No input file inputbt.data. Usi"..., 53) = 53
+write(1, " Size:  12x 12x 12\n", 19)    = 19
+write(1, " Iterations:  60   dt:   0.01000"..., 34) = 34
+mmap(NULL, 8589938688, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7f296a724000
+getpid()                                = 3399
+openat(AT_FDCWD, "/sys/devices/system/cpu/online", O_RDONLY|O_CLOEXEC) = 3
+read(3, "0-7\n", 8192)                  = 4
+close(3)                                = 0
+prlimit64(0, RLIMIT_STACK, NULL, {rlim_cur=8192*1024, rlim_max=RLIM64_INFINITY}) = 0
+sysinfo({uptime=776, loads=[91904, 90848, 54272], totalram=16740937728, freeram=12589481984, sharedram=39727104, bufferram=461295616, totalswap=2147479552, freeswap=2147479552, procs=756, totalhigh=0, freehigh=0, mem_unit=1}) = 0
+mmap(NULL, 1052672, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7f2b6b3de000
+sched_getaffinity(0, 1048576, [0, 1, 2, 3, 4, 5, 6, 7]) = 8
+sched_setaffinity(0, 8, NULL)           = -1 EFAULT (Bad address)
+munmap(0x7f2b6b3de000, 1052672)         = 0
+rt_sigaction(SIGHUP, NULL, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=0}, 8) = 0
+rt_sigaction(SIGINT, NULL, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=0}, 8) = 0
+rt_sigaction(SIGQUIT, NULL, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=0}, 8) = 0
+rt_sigaction(SIGILL, NULL, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=0}, 8) = 0
+rt_sigaction(SIGABRT, NULL, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=0}, 8) = 0
+rt_sigaction(SIGFPE, NULL, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=0}, 8) = 0
+rt_sigaction(SIGBUS, NULL, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=0}, 8) = 0
+rt_sigaction(SIGSEGV, NULL, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=0}, 8) = 0
+rt_sigaction(SIGSYS, NULL, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=0}, 8) = 0
+rt_sigaction(SIGTERM, NULL, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=0}, 8) = 0
+rt_sigaction(SIGPIPE, NULL, {sa_handler=SIG_DFL, sa_mask=[], sa_flags=0}, 8) = 0
+sched_getaffinity(0, 8, [0, 1, 2, 3, 4, 5, 6, 7]) = 8
+sched_getaffinity(0, 8, [0, 1, 2, 3, 4, 5, 6, 7]) = 8
+sched_setaffinity(0, 8, [0])            = 0
+sched_setaffinity(0, 8, [1])            = 0
+sched_setaffinity(0, 8, [2])            = 0
+sched_setaffinity(0, 8, [3])            = 0
+sched_setaffinity(0, 8, [4])            = 0
+sched_setaffinity(0, 8, [5])            = 0
+sched_setaffinity(0, 8, [6])            = 0
+sched_setaffinity(0, 8, [7])            = 0
+sched_setaffinity(0, 8, [0, 1, 2, 3, 4, 5, 6, 7]) = 0
+sched_setaffinity(0, 8, [0, 1, 2, 3, 4, 5, 6, 7]) = 0
+sched_getaffinity(0, 8, [0, 1, 2, 3, 4, 5, 6, 7]) = 8
+sched_setaffinity(0, 8, [0, 1, 2, 3, 4, 5, 6, 7]) = 0
+mmap(NULL, 8392832, PROT_NONE, MAP_PRIVATE|MAP_ANONYMOUS|MAP_STACK, -1, 0) = 0x7f2969f22000
+mprotect(0x7f2969f23000, 8388736, PROT_READ|PROT_WRITE) = 0
+clone(child_stack=0x7f296a721bb0, flags=CLONE_VM|CLONE_FS|CLONE_FILES|CLONE_SIGHAND|CLONE_THREAD|CLONE_SYSVSEM|CLONE_SETTLS|CLONE_PARENT_SETTID|CLONE_CHILD_CLEARTID, parent_tidptr=0x7f296a722a50, tls=0x7f296a722780, child_tidptr=0x7f296a722a50) = 3400
+sched_setaffinity(0, 8, [0, 1, 2, 3, 4, 5, 6, 7]) = 0
+futex(0x10ab628, FUTEX_WAKE_PRIVATE, 1) = 1
+futex(0x10ab640, FUTEX_WAKE_PRIVATE, 1) = 1
+write(1, " Time step    1\n", 16)       = 16
+sched_yield()                           = 0
+write(1, " Time step   20\n", 16)       = 16
+write(1, " Time step   40\n", 16)       = 16
+write(1, " Time step   60\n", 16)       = 16
+write(1, " Verification being performed fo"..., 42) = 42
+write(1, " accuracy setting for epsilon = "..., 53) = 53
+write(1, " Comparison of RMS-norms of resi"..., 37) = 37
+write(1, "           0                -nan"..., 73) = 73
+write(1, "           1                -nan"..., 73) = 73
+write(1, "           2                -nan"..., 73) = 73
+write(1, "           3                -nan"..., 73) = 73
+write(1, "           4                -nan"..., 73) = 73
+write(1, " Comparison of RMS-norms of solu"..., 43) = 43
+write(1, "           0                -nan"..., 73) = 73
+write(1, "           1                -nan"..., 73) = 73
+write(1, "           2                -nan"..., 73) = 73
+write(1, "           3                -nan"..., 73) = 73
+write(1, "           4                -nan"..., 73) = 73
+write(1, " Verification Successful\n", 25) = 25
+write(1, "\n\n", 2)                     = 2
+write(1, " BT Benchmark Completed\n", 24) = 24
+write(1, " Class           =              "..., 44) = 44
+write(1, " Size            =              "..., 44) = 44
+write(1, " Iterations      =              "..., 44) = 44
+write(1, " Threads         =              "..., 44) = 44
+write(1, " Time in seconds =              "..., 44) = 44
+write(1, " Mop/s total     =              "..., 44) = 44
+write(1, " Operation type  =           flo"..., 44) = 44
+write(1, " Verification    =              "..., 44) = 44
+write(1, " Version         =           3.0"..., 44) = 44
+write(1, " Compile date    =              "..., 44) = 44
+write(1, "\n", 1)                       = 1
+write(1, " Compile options:\n", 18)     = 18
+write(1, "    CC           = clang\n", 25) = 25
+write(1, "    CLINK        = clang\n", 25) = 25
+write(1, "    C_LIB        = /home/matthia"..., 66) = 66
+write(1, "    C_INC        = -I../common\n", 31) = 31
+write(1, "    CFLAGS       = -O3 -fopenmp "..., 33) = 33
+write(1, "    CLINKFLAGS   = (none)\n", 26) = 26
+write(1, "    RAND         = (none)\n", 26) = 26
+munmap(0x7f296a724000, 8589938688)      = 0
+getpid()                                = 3399
+futex(0x7f296a722a50, FUTEX_WAIT, 3400, NULL) = 0
+exit_group(0)                           = ?
++++ exited with 0 +++

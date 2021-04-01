@@ -47,6 +47,10 @@ c---------------------------------------------------------------------
 #include "npb-C.h"
 #include "npbparams.h"
 
+/* PMC */
+#include <signal.h>
+#include <unistd.h>
+
 #define	NZ	NA*(NONZER+1)*(NONZER+1)+NA*(NONZER+2)
 
 /* global variables */
@@ -244,6 +248,12 @@ c-------------------------------------------------------------------*/
 
 
     timer_clear( 1 );
+      //PMC
+  long cpid = getpid();
+  if(argc>=2){
+  	printf("PID:%ld \n",cpid);
+	kill(cpid, SIGSTOP);
+  }
     timer_start( 1 );
 
 /*--------------------------------------------------------------------
@@ -300,7 +310,10 @@ c-------------------------------------------------------------------*/
 } /* end parallel */
 
     timer_stop( 1 );
-
+ if(argc>=2){
+    printf("BENCH COMPLETE!\n");
+    kill(cpid, SIGSTOP);
+  }
 /*--------------------------------------------------------------------
 c  End of timed section
 c-------------------------------------------------------------------*/

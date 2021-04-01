@@ -37,6 +37,10 @@
 /* global variables */
 #include "header.h"
 
+/* PMC */
+#include <signal.h>
+#include <unistd.h>
+
 /* function declarations */
 static void add(void);
 static void adi(void);
@@ -137,6 +141,12 @@ c-------------------------------------------------------------------*/
   initialize();
 
   timer_clear(1);
+  //PMC
+  long cpid = getpid();
+  if(argc>=2){
+        printf("PID:%ld \n",cpid);
+        kill(cpid, SIGSTOP);
+  }
   timer_start(1);
    
   for (step = 1; step <= niter; step++) {
@@ -156,6 +166,12 @@ c-------------------------------------------------------------------*/
 } /* end parallel */
 
   timer_stop(1);
+    //PMC
+  if(argc>=2){
+    printf("BENCH COMPLETE!\n");
+    kill(cpid, SIGSTOP);
+  }
+
   tmax = timer_read(1);
        
   verify(niter, &class, &verified);
