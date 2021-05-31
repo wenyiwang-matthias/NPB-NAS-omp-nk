@@ -4,7 +4,7 @@
 
 To construct Linux/OpenMP, with the same flags as Nautilus/RTK and Nautilus/CCK:
 
-`git checkout <RTK-CCK/LinuxOMP branch>`
+`git checkout rtk-cck-flags`
 
 `make clean;make suite`
 
@@ -16,7 +16,7 @@ Now to run them for testing, go to the directory `./bin` ; the executables are l
 
 To construct Linux/OpenMP, with the same flags as Nautilus/PIK:
 
-`git checkout <PIK/LinuxOMP branch>`
+`git checkout pik-flags`
 
 `make clean;make suite`
 
