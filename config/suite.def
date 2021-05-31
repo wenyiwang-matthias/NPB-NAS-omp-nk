@@ -8,6 +8,19 @@
 # The class is one of "S", "W", "A", "B", and "C". 
 # No blank lines. 
 # The following example builds serial sample sizes of all benchmarks. 
+
+
+# The following bechmarks and corresponding classes were used in the test.
+bt	B
+ft	B
+cg	C
+ep	C
+lu	C
+mg	C
+is	C
+sp	C
+
+
 #ft	A
 #mg	A
 #sp	A
@@ -20,7 +33,7 @@
 
 #ft      B
 #mg      B
-sp      B
+#sp      B
 #lu      B
 #bt      B
 #is      B

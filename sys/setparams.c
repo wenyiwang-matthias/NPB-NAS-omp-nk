@@ -261,7 +261,7 @@ void write_info(int type, char class)
   FILE *fp;
   fp = fopen(FILENAME, "w");
   if (fp == NULL) {
-    printf("setparams: Can't open file %d for writing\n", FILENAME);
+    printf("setparams: Can't open file %s for writing\n", FILENAME);
     exit(1);
   }
 
